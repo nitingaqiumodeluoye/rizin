@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "master"
@@ -36,14 +37,7 @@ jobs:
           base: ${{ github.ref }}
           filters: |
             edited:
-              - '**.c'
-              - '**.h'
-              - '**.in'
-              - '**.inc'
-              - '**/meson.build'
-              - 'subprojects/**'
-              - '.github/workflows/ci.yml'
-              - 'test/**'
+              - '**/__never_match__'
 
   build-and-test:
     needs: changes
@@ -636,7 +630,6 @@ jobs:
     name: Build Windows zip/installer ${{ matrix.name }}
     runs-on: windows-latest
     if: contains(github.head_ref, 'dist') || contains(github.head_ref, 'windows') || (github.event_name == 'push' && (contains(github.ref, 'release-') || github.ref == 'refs/heads/stable'))
-    needs: [ build-and-test ]
     strategy:
       fail-fast: false
       matrix:
